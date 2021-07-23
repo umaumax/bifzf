@@ -1,4 +1,4 @@
-# bash implemented fuzzy finder
+# bash implementation of fuzzy finder
 
 This is for a poor target machine or temporary .bashrc setting login environment.
 
