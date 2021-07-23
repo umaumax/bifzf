@@ -1,5 +1,7 @@
 # bash implemented fuzzy finder
 
+This is for a poor target machine or temporary .bashrc setting login environment.
+
 ## how to use
 ``` bash
 ls | bifzf
@@ -13,3 +15,4 @@ docker-exec () {
   docker exec -it $container_id /bin/bash
 }
 ```
+
