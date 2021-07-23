@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX_LINE=${MAX_LINE:-10}
+MAX_LINE=${BIFZF_MAX_LINE:-10}
 
 text=""
 cursor_pos=0
@@ -9,7 +9,7 @@ target_number=0
 in_tty='/dev/tty'
 out_tty='/dev/tty'
 
-help() {
+bifzf_help() {
   printf "\e[33m" 1>&2
   cat 1>&2 <<EOF
 usage: $0
@@ -20,18 +20,18 @@ EOF
 }
 
 if [[ ! -p /dev/stdin ]]; then
-  help
+  bifzf_help
   exit 1
 fi
 lines=$(cat)
 
-trap_handler() {
+bifzf_trap_handler() {
   local signal=$(($? - 128))
-  clear_display
+  bifzf_clear_display
   stty sane
   exit $signal
 }
-trap trap_handler 1 2 3 15
+trap bifzf_trap_handler 1 2 3 15
 
 # get space
 {
@@ -42,7 +42,7 @@ trap trap_handler 1 2 3 15
   printf "\e7" # tput sc
 } >$out_tty
 
-clear_display() {
+bifzf_clear_display() {
   {
     # restore cursor position
     printf "\e8"  # tput rc
@@ -50,14 +50,14 @@ clear_display() {
     printf "\e[J" # tput cd
   } >$out_tty
 }
-display() {
+bifzf_display() {
   local text="$1"
   local cursor_pos="$2"
   local target_number="$3"
   {
     # hide cursor
     printf "\e[\x3f\x32\x35\x6c" # tput civis
-    clear_display
+    bifzf_clear_display
     printf "\e[36m" 1>&2
     printf "> %s\n" "${text:0:$cursor_pos}${text:$cursor_pos}"
     printf "\e[00m" 1>&2
@@ -74,8 +74,8 @@ display() {
   } >$out_tty
 }
 
-main() {
-  display "$text" "$cursor_pos" "$target_number"
+bifzf_main() {
+  bifzf_display "$text" "$cursor_pos" "$target_number"
   while true; do
     IFS="" read -rsn1 input <$in_tty
 
@@ -115,7 +115,7 @@ main() {
           cursor_pos=${#text}
         fi
       fi
-      display "$text" "$cursor_pos" "$target_number"
+      bifzf_display "$text" "$cursor_pos" "$target_number"
       continue
     fi
     target_number=0
@@ -141,12 +141,12 @@ main() {
       fi
     fi
 
-    display "$text" "$cursor_pos" "$target_number"
+    bifzf_display "$text" "$cursor_pos" "$target_number"
   done
 
-  clear_display
+  bifzf_clear_display
   output=$(printf "%s" "$lines" | grep "$text" | awk 'NR=='"$target_number"'+1 { printf "%s", $0}')
   printf "%s" "$output"
 }
 
-main "$@"
+bifzf_main "$@"
