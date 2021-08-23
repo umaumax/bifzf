@@ -1,5 +1,7 @@
 #!/bin/bash
 
+COLUMNS=$COLUMNS bash <(
+  cat <<'BASH_EOF'
 MAX_LINE=${BIFZF_MAX_LINE:-10}
 
 text=""
@@ -150,3 +152,5 @@ bifzf_main() {
 }
 
 bifzf_main "$@"
+BASH_EOF
+) "$@"
