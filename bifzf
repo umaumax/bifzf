@@ -63,7 +63,13 @@ bifzf_display() {
     printf "\e[36m" 1>&2
     printf "> %s\n" "${text:0:$cursor_pos}${text:$cursor_pos}"
     printf "\e[00m" 1>&2
-    printf "%s" "$lines" | grep -F -i --color=always "$text" | awk 'NR <='"$MAX_LINE"' { $0=substr($0, 0,'"$COLUMNS"'-2); if (NR=='"$target_number"'+1) { printf "\033[32m*\033[0m \033[4m%s\033[0m\n", $0; } else { printf "  %s\n", $0;}}'
+    printf "%s" "$lines" | {
+      if [[ -n "$text" ]]; then
+        grep -F -i --color=always "$text"
+      else
+        cat
+      fi
+    } | awk 'NR <='"$MAX_LINE"' { $0=substr($0, 0,'"$COLUMNS"'-2); if (NR=='"$target_number"'+1) { printf "\033[32m*\033[0m \033[4m%s\033[0m\n", $0; } else { printf "  %s\n", $0;}}'
     # restore cursor position
     printf "\e8" # tput rc
     # move right
