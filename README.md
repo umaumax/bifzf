@@ -5,6 +5,8 @@ This is for a poor target machine or temporary .bashrc setting login environment
 ## how to use
 ``` bash
 ls | bifzf
+
+seq 1 30 | BIFZF_MAX_LINE=20 bifzf
 ```
 
 e.g. for docker exec
