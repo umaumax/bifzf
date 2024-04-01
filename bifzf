@@ -63,7 +63,7 @@ bifzf_display() {
     printf "\e[36m" 1>&2
     printf "> %s\n" "${text:0:$cursor_pos}${text:$cursor_pos}"
     printf "\e[00m" 1>&2
-    printf "%s" "$lines" | {
+    printf "%s" "$lines" | nl -s '‖' -w '3' | {
       if [[ -n "$text" ]]; then
         grep -F -i --color=always -- "$text"
       else
@@ -152,7 +152,7 @@ bifzf_main() {
   done
 
   bifzf_clear_display
-  output=$(printf "%s" "$lines" | grep -F -- "$text" | awk 'NR=='"$target_number"'+1 { printf "%s", $0}')
+  output=$(printf "%s" "$lines" | nl -s '‖' -w '3' | grep -F -- "$text" | sed 's/^.*‖//' | awk 'NR=='"$target_number"'+1 { printf "%s", $0}')
   printf "%s" "$output"
 }
 
