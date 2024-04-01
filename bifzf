@@ -93,7 +93,6 @@ bifzf_main() {
     fi
     # ESC
     if [[ "$input" == $'\x1b' ]]; then
-      # pre_input="$input"
       IFS="" read -rsn1 input2 <$in_tty
       IFS="" read -rsn1 input3 <$in_tty
       input="${input}${input2}${input3}"
@@ -130,7 +129,6 @@ bifzf_main() {
 
     # delete
     if [[ "$input" == $'\x7f' ]]; then
-      # text=${text%?}
       left_text="${text:0:$cursor_pos}"
       right_text="${text:$cursor_pos}"
       text="${left_text%?}${right_text}"
