@@ -128,7 +128,8 @@ bifzf_main() {
     target_number=0
 
     # delete
-    if [[ "$input" == $'\x7f' ]]; then
+    # NOTE: some bash version has bug of $'\x7f'
+    if [[ "$input" == $(printf '\x7f') ]]; then
       left_text="${text:0:$cursor_pos}"
       right_text="${text:$cursor_pos}"
       text="${left_text%?}${right_text}"
